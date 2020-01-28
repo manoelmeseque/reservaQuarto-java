@@ -6,22 +6,22 @@ import java.util.Date;
 import java.util.Scanner;
 
 import model.entities.Reserva;
+import model.exception.DomainException;
 
 public class Main {
 
-	public static void main(String[] args) throws ParseException {
+	public static void main(String[] args) {
+		
 		Scanner sc = new Scanner(System.in);
-		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		System.out.print("Numero do quarto: ");
-		int numero = sc.nextInt();
-		System.out.print("Cleck-In (dd/MM/yyyy): ");
-		Date checkIn = sdf.parse(sc.next());
-		System.out.print("Cleck-Out (dd/MM/yyyy): ");
-		Date checkOut = sdf.parse(sc.next());
-
-		if (!checkOut.after(checkIn)) {
-			System.out.println("Erro: O check-Out não pode ser antes do check-In");
-		} else {
+		try {
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+			System.out.print("Numero do quarto: ");
+			int numero = sc.nextInt();
+			System.out.print("Cleck-In (dd/MM/yyyy): ");
+			Date checkIn = sdf.parse(sc.next());
+			System.out.print("Cleck-Out (dd/MM/yyyy): ");
+			Date checkOut = sdf.parse(sc.next());
+	
 			Reserva reserva = new Reserva(numero, checkIn, checkOut);
 			System.out.println("Reserva: " + reserva);
 			System.out.println();
@@ -29,18 +29,19 @@ public class Main {
 			checkIn = sdf.parse(sc.next());
 			System.out.print("Cleck-Out (dd/MM/yyyy): ");
 			checkOut = sdf.parse(sc.next());
-
-			String erro = reserva.atualizaData(checkIn, checkOut);
-			if(erro != null) {
-				System.out.println("Erro: " + erro);
-			}else {
-				System.out.print(reserva);
-			}
-			
-			
-
+	
+			reserva.atualizaData(checkIn, checkOut);
+			System.out.print(reserva);
 		}
-
+		catch(ParseException e) {
+			System.out.println("Formato de data invalido!");
+		}
+		catch(DomainException e) {
+			System.out.println("Erro: " + e.getMessage());
+		}
+		catch(RuntimeException e) {
+			System.out.println("Erro inesperado!");
+		}
 		sc.close();
 	}
 

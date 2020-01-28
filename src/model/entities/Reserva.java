@@ -1,8 +1,11 @@
 package model.entities;
 
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
+
+import model.exception.DomainException;
 
 public class Reserva {
 	private Integer numeroQuarto;
@@ -15,7 +18,11 @@ public class Reserva {
 		
 	}
 	
-	public Reserva(Integer numeroQuarto, Date checkIn, Date checkOut) {
+	public Reserva(Integer numeroQuarto, Date checkIn, Date checkOut) throws DomainException {
+		if(!checkOut.after(checkIn)) {
+			throw new DomainException("O check-Out não pode ser antes do check-In");
+		}
+		
 		this.numeroQuarto = numeroQuarto;
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
@@ -42,16 +49,15 @@ public class Reserva {
 		return TimeUnit.DAYS.convert(d, TimeUnit.MILLISECONDS);
 	}
 	
-	public String atualizaData(Date checkIn, Date checkOut) {
+	public void atualizaData(Date checkIn, Date checkOut) throws DomainException{
 		Date agora = new Date();
 		if(checkIn.before(agora) || checkOut.before(agora)) {
-			return "Erro: So pode usar uma data futura";
+			throw new DomainException("So pode usar uma data futura");
 		}else if(!checkOut.after(checkIn)) {
-			return "Erro: O check-Out não pode ser antes do check-In";
+			throw new DomainException("O check-Out não pode ser antes do check-In");
 		}
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
-		return null;
 	}
 	
 	@Override
