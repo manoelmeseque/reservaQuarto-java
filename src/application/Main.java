@@ -18,10 +18,10 @@ public class Main {
 		Date checkIn = sdf.parse(sc.next());
 		System.out.print("Cleck-Out (dd/MM/yyyy): ");
 		Date checkOut = sdf.parse(sc.next());
-		
-		if(!checkOut.after(checkIn)) {
+
+		if (!checkOut.after(checkIn)) {
 			System.out.println("Erro: O check-Out não pode ser antes do check-In");
-		}else {
+		} else {
 			Reserva reserva = new Reserva(numero, checkIn, checkOut);
 			System.out.println("Reserva: " + reserva);
 			System.out.println();
@@ -29,19 +29,18 @@ public class Main {
 			checkIn = sdf.parse(sc.next());
 			System.out.print("Cleck-Out (dd/MM/yyyy): ");
 			checkOut = sdf.parse(sc.next());
-			
-			Date agora = new Date();
-			if(checkIn.before(agora) || checkOut.before(agora)) {
-				System.out.println("Erro: So pode usar uma data futura");
-			}else if(!checkOut.after(checkIn)) {
-				System.out.println("Erro: O check-Out não pode ser antes do check-In");
+
+			String erro = reserva.atualizaData(checkIn, checkOut);
+			if(erro != null) {
+				System.out.println("Erro: " + erro);
 			}else {
-				reserva.atualizaData(checkIn, checkOut);
 				System.out.print(reserva);
 			}
 			
+			
+
 		}
-		
+
 		sc.close();
 	}
 
